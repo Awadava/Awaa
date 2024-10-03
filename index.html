@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор жаропонижающих</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #E0F7FA;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #4CAF50;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 15px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #F1F8E9;
+            border-radius: 10px;
+            border: 1px solid #C5E1A5;
+        }
+
+        .warning {
+            margin-top: 10px;
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+
+        .articles {
+            margin-top: 30px;
+        }
+
+        .articles h2 {
+            color: #333;
+        }
+
+        .articles ul {
+            padding-left: 20px;
+        }
+
+        .articles ul li {
+            margin-top: 5px;
+        }
+
+        .articles ul li a {
+            text-decoration: none;
+            color: #0288D1;
+        }
+
+        .articles ul li a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Калькулятор жаропонижающих</h1>
+
+        <label for="weight">Вес ребенка (кг):</label>
+        <input type="number" id="weight" placeholder="Введите вес">
+
+        <label for="paracetamol-form">Форма парацетамола:</label>
+        <select id="paracetamol-form">
+            <option value="syrup">Сироп (120 мг/5 мл)</option>
+            <option value="suppository">Суппозитории (100 мг, 250 мг)</option>
+        </select>
+
+        <label for="ibuprofen-form">Форма ибупрофена:</label>
+        <select id="ibuprofen-form">
+            <option value="syrup">Сироп (100 мг/5 мл)</option>
+        </select>
+
+        <button onclick="calculate()">Рассчитать дозировку</button>
+
+        <div class="result" id="result"></div>
+
+        <div class="warning">
+            <p>Имеются противопоказания. Перед приемом, проконсультируйтесь со специалистом.</p>
+        </div>
+
+        <div class="articles">
+            <h2>Полезные статьи</h2>
+            <ul>
+                <li><a href="https://example.com/article1" target="_blank">Как выбрать жаропонижающее</a></li>
+                <li><a href="https://example.com/article2" target="_blank">Когда давать жаропонижающее детям</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            let weight = document.getElementById('weight').value;
+            if (!weight || weight <= 0) {
+                alert('Пожалуйста, введите корректный вес.');
+                return;
+            }
+
+            // Получаем форму выпуска
+            let paracetamolForm = document.getElementById('paracetamol-form').value;
+
+            // Дозировка парацетамола: 15 мг/кг
+            let paracetamol_dose = (15 * weight).toFixed(2);
+
+            // Дозировка ибупрофена: 10 мг/кг
+            let ibuprofen_dose = (10 * weight).toFixed(2);
+
+            // Рассчет дозировки парацетамола в зависимости от формы выпуска
+            let paracetamol_result;
+            if (paracetamolForm === 'syrup') {
+                // Парацетамол сироп: 120 мг в 5 мл
+                paracetamol_result = `Парацетамол (сироп): ${(paracetamol_dose / 24).toFixed(2)} мл`;
+            } else if (paracetamolForm === 'suppository') {
+                // Парацетамол суппозитории: 100 мг, 250 мг
+                if (paracetamol_dose <= 100) {
+                    paracetamol_result = `Парацетамол (суппозитории): 1 суппозиторий по 100 мг`;
+                } else if (paracetamol_dose <= 250) {
+                    paracetamol_result = `Парацетамол (суппозитории): 1 суппозиторий по 250 мг`;
+                } else {
+                    paracetamol_result = `Парацетамол (суппозитории): ${(paracetamol_dose / 250).toFixed(2)} суппозитория(ев) по 250 мг`;
+                }
+            }
+
+            // Рассчет дозировки ибупрофена
+            let ibuprofen_result = `Ибупрофен (сироп): ${(ibuprofen_dose / 20).toFixed(2)} мл`;
+
+            // Информация по возрасту, дозировке и частоте приема
+            let age_info = `
+                <p><strong>Парацетамол:</strong> Разрешен с 3 месяцев. Прием до 4 раз в сутки с перерывом не менее 4-6 часов.</p>
+                <p><strong>Ибупрофен:</strong> Разрешен с 6 месяцев. Прием до 3 раз в сутки с перерывом не менее 6 часов.</p>
+            `;
+
+            document.getElementById('result').innerHTML = `
+                <h2>Рекомендуемая дозировка:</h2>
+                <p>${paracetamol_result}</p>
+                <p>${ibuprofen_result}</p>
+                ${age_info}
+            `;
+        }
+    </script>
+</body>
+</html>
